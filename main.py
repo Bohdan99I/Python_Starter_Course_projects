@@ -474,11 +474,14 @@ class MillionaireGame:
         print(f"💰 Ви забираєте {winnings} грн! Дякуємо за гру!")
         return winnings
 
-    def game_over(self, won=False):
+    def game_over(self, won=False, took_money=False):
         """Завершення гри"""
         if won:
             print("🎉🎉🎉 ВІТАЄМО! ВИ СТАЛИ МІЛЬЙОНЕРОМ! 🎉🎉🎉")
             winnings = 1000000
+        elif took_money:
+            # Гравець забрав гроші - виграш вже розрахований
+            winnings = self.current_prize
         elif self.current_question == 0:
             print("😢 Гра закінчена! Ви не виграли нічого.")
             winnings = 0
@@ -520,9 +523,8 @@ class MillionaireGame:
                 elif user_choice == "З":
                     # Забрати гроші
                     winnings = self.take_money()
-                    self.statistics["total_winnings"] += winnings
-                    self.statistics["games_played"] += 1
-                    self.save_statistics()
+                    self.current_prize = winnings
+                    self.game_over(took_money=True)
                     return
                 else:
                     # Відповідь на питання
