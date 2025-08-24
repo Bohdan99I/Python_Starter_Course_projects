@@ -369,24 +369,41 @@ class MillionaireGame:
 
         self.lifelines["audience"] = False
 
-        # Зал зазвичай знає правильну відповідь (60-80% голосів)
-        percentages = [5, 5, 5, 5]  # Базові відсотки для всіх варіантів
-
         correct_index = question_data["correct"]
 
-        # Правильна відповідь отримує 60-80% голосів
-        correct_percentage = random.randint(60, 80)
+        # Правильна відповідь отримує 50-75% голосів
+        correct_percentage = random.randint(50, 75)
+
+        # Розподіляємо решту голосів між трьома неправильними варіантами
+        remaining = 100 - correct_percentage
+
+        # Створюємо випадковий розподіл для неправильних відповідей
+        wrong_percentages = []
+        for i in range(2):  # Перші два неправильних варіанти
+            # Кожен отримує від 1% до половини залишку
+            max_for_this = min(remaining - (2 - i), remaining // 2)
+            if max_for_this < 1:
+                max_for_this = 1
+            percentage = random.randint(1, max_for_this)
+            wrong_percentages.append(percentage)
+            remaining -= percentage
+
+        # Останній неправильний варіант отримує все, що залишилося
+        wrong_percentages.append(remaining)
+
+        # Перемішуємо неправильні відсотки для випадковості
+        random.shuffle(wrong_percentages)
+
+        # Створюємо фінальний список відсотків
+        percentages = [0, 0, 0, 0]
         percentages[correct_index] = correct_percentage
 
-        # Розподіляємо решту голосів між іншими варіантами
-        remaining = 100 - correct_percentage
+        # Розподіляємо неправильні відсотки
+        wrong_index = 0
         for i in range(4):
             if i != correct_index:
-                percentages[i] = random.randint(1, remaining // 3)
-
-        # Нормалізуємо до 100%
-        total = sum(percentages)
-        percentages = [int(p * 100 / total) for p in percentages]
+                percentages[i] = wrong_percentages[wrong_index]
+                wrong_index += 1
 
         print("👥 Результати опитування залу:")
         letters = ["А", "Б", "В", "Г"]
