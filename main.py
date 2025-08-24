@@ -1,9 +1,13 @@
+"""Програма-гра 'Хто хоче стати мільйонером' на Python."""
+
 import random
 import json
 import os
 
 
 class MillionaireGame:
+    """Клас для гри 'Хто хоче стати мільйонером'"""
+
     def __init__(self):
         self.questions = [
             {
@@ -288,8 +292,9 @@ class MillionaireGame:
         print("-" * 50)
         print(f"❓ {question_data['question']}")
         print()
+        letters = ["А", "Б", "В", "Г"]
         for i, option in enumerate(question_data["options"]):
-            print(f"   {option}")
+            print(f"  {letters[i]}) {option.split(')')[1].strip()}")
         print("-" * 50)
 
     def display_lifelines(self):
@@ -386,8 +391,8 @@ class MillionaireGame:
         print("👥 Результати опитування залу:")
         letters = ["А", "Б", "В", "Г"]
         for i, percentage in enumerate(percentages):
-            bar = "█" * (percentage // 5)  # Графічне представлення
-            print(f"   {letters[i]}: {percentage:2d}% {bar}")
+            chart_bar = "█" * (percentage // 5)  # Графічне представлення
+            print(f"   {letters[i]}: {percentage:2d}% {chart_bar}")
 
     def get_user_choice(self):
         """Отримання вибору користувача"""
@@ -557,7 +562,7 @@ class MillionaireGame:
         try:
             with open("game_stats.json", "w", encoding="utf-8") as f:
                 json.dump(self.statistics, f, ensure_ascii=False, indent=2)
-        except Exception as e:
+        except (IOError, OSError) as e:
             print(f"Помилка збереження статистики: {e}")
 
     def load_statistics(self):
@@ -566,8 +571,8 @@ class MillionaireGame:
             if os.path.exists("game_stats.json"):
                 with open("game_stats.json", "r", encoding="utf-8") as f:
                     self.statistics = json.load(f)
-        except Exception as e:
-            print(f"Помилка завантаження статистики: {e}")
+        except (IOError, OSError) as e:
+            print(f"Помилка збереження статистики: {e}")
 
 
 def main():
