@@ -594,6 +594,9 @@ class MillionaireGame:
 
 def main():
     """Головна функція програми"""
+    # Створюємо один екземпляр гри для всієї сесії
+    game = MillionaireGame()
+
     while True:
         print("\n" + "=" * 60)
         print("🏆 ХТО ХОЧЕ СТАТИ МІЛЬЙОНЕРОМ? 🏆")
@@ -605,10 +608,12 @@ def main():
         choice = input("\nВаш вибір (1-3): ").strip()
 
         if choice == "1":
-            game = MillionaireGame()
-            game.play_game()
+            # Створюємо новий екземпляр тільки для нової гри
+            new_game = MillionaireGame()
+            new_game.play_game()
+            # Оновлюємо статистику в основному екземплярі
+            game.load_statistics()
         elif choice == "2":
-            game = MillionaireGame()
             game.display_statistics()
             input("\nНатисніть Enter для продовження...")
         elif choice == "3":
